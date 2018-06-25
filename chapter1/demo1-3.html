@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<script>
+    var c = document.getElementById("canvas");
+    var ctx = c.getContext("2d");
+
+    ctx.font = "38pt Time New Roman";
+    ctx.fillStyle = "blue";
+    ctx.strokeStyle = "red";
+    ctx.fillText("Hello Canvas1", c.width/2-150, c.height/2-15);
+    ctx.strokeText("Hello Canvas1", c.width/2-150, c.height/2-15);
+</script>
+</body>
+</html>

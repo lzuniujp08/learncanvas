@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="600" height="600"></canvas>
+<script>
+    var c = document.getElementById("canvas"),
+        ctx = c.getContext("2d"),
+        offset = 15,
+        fontSize = 15,
+        radius = c.width/2-50,
+        centerX = c.width/2,
+        centerY = c.height/2,
+        T = 0;
+
+    drawClock();
+    T = setInterval(drawClock, 1000);
+
+    function drawClock() {
+        ctx.clearRect(0, 0, c.width, c.height);
+        drawCircle(radius, false);
+        drawCircle(10, true);
+        drawNumbers();
+        drawIntervals();
+        drawHands();
+    }
+    
+    function drawIntervals() {
+        for(var i=0;i<61;i++){
+            var _w = i%5===0?4:1;
+            var _r1 = radius,
+                _r2 = radius-offset/2,
+                _angle = Math.PI/30*(i - 15);
+            var _x1 = centerX + Math.cos(_angle) * _r1,
+                _y1 = centerY + Math.sin(_angle) * _r1,
+                _x2 = centerX + Math.cos(_angle) * _r2,
+                _y2 = centerY + Math.sin(_angle) * _r2;
+            drawLine(_x1, _y1, _x2, _y2, _w);
+        }
+    }
+    
+    function drawHands() {
+        var date = new Date();
+        var _h = date.getHours(),
+            _m = date.getMinutes(),
+            _s = date.getSeconds();
+        _h = _h>12?_h-12:_h;
+        var _hRadius = radius/3,
+            _hAngle = Math.PI/6*(_h-3);
+        var _hx = centerX + Math.cos(_hAngle) * _hRadius,
+            _hy = centerY + Math.sin(_hAngle) * _hRadius;
+        drawLine(centerX, centerY, _hx, _hy, 6);
+
+        var _mRadius = radius/2,
+            _mAngle = Math.PI/30*(_m - 15);
+        var _mx = centerX + Math.cos(_mAngle) * _mRadius,
+            _my = centerY + Math.sin(_mAngle) * _mRadius;
+        drawLine(centerX, centerY, _mx, _my, 3);
+
+        var _sRadius = radius - offset,
+            _sAngle = Math.PI/30*(_s - 15);
+        var _sx = centerX + Math.cos(_sAngle) * _sRadius,
+            _sy = centerY + Math.sin(_sAngle) * _sRadius;
+        drawLine(centerX, centerY, _sx, _sy, 1);
+    }
+
+    function drawLine(x1, y1, x2, y2, w) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineWidth = w;
+        ctx.lineCap = "round";
+        ctx.stroke();
+    }
+    
+    function drawNumbers() {
+        for(var i=1;i<13;i++){
+            var _angle = Math.PI/6*(i-3);
+            var _r = radius + offset;
+            var _x = Math.cos(_angle) * _r,
+                _y = Math.sin(_angle) * _r;
+            var _txtWidth = ctx.measureText(i.toString()).width;
+            _x = _x - _txtWidth/2;
+            _y = _y + fontSize/2;
+            _x = centerX + _x;
+            _y = centerY + _y;
+            drawText(i, _x, _y);
+        }
+    }
+    
+    function drawText(text, x, y) {
+        ctx.font = "bold "+fontSize+"px 微软雅黑";
+        ctx.fillStyle = "black";
+        ctx.fillText(text, x, y);
+    }
+    
+    function drawCircle(radius, isFill) {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI*2, true);
+        if(isFill) {
+            ctx.fillStyle = "#949494";
+            ctx.fill();
+        }else {
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    }
+</script>
+</body>
+</html>

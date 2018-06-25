@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div id="mouse-pos"></div>
+<div id="canvas-pos"></div>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    var image = new Image();
+    image.src = "img/draw2denv.png";
+    image.onload = function(e) {
+        e.preventDefault();
+        ctx.drawImage(image, 0, 0, c.width, c.height);
+    };
+
+    c.addEventListener("mousemove", function (e) {
+        e.preventDefault();
+        var mousePos = document.querySelector("#mouse-pos"),
+            canvasPos = document.querySelector("#canvas-pos");
+        mousePos.innerHTML = "鼠标位置："+e.clientX+", "+e.clientY;
+        var _cPosition = getPosition(e.clientX, e.clientY);
+        canvasPos.innerHTML = "画布位置："+_cPosition.x.toFixed(0)+", "+_cPosition.y.toFixed(0);
+    });
+    
+    
+    function getPosition(x, y) {
+        var bbox = c.getBoundingClientRect();
+        return { x: x - bbox.left * (c.width  / bbox.width),
+            y: y - bbox.top  * (c.height / bbox.height)
+        };
+    }
+</script>
+</body>
+</html>

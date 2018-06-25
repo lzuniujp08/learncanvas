@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div id="mouse-pos"></div>
+<div id="canvas-pos"></div>
+<canvas id="canvas" width="600" height="600"></canvas>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    c.addEventListener("click", function (e) {
+        var _xy = getPosition(e.offsetX, e.offsetY),
+            _r = randomNum(10, 50),
+            _c = getRandomColor();
+        ctx.beginPath();
+        ctx.moveTo(_xy.x, _xy.y);
+        ctx.arc(_xy.x, _xy.y, _r, 0, Math.PI*2, false);
+        ctx.fillStyle = _c;
+        ctx.fill();
+    });
+
+    drawGrid();
+
+    function getRandomColor(){
+        return  '#' +
+            (function(color){
+                return (color +=  '0123456789abcdef'[Math.floor(Math.random()*16)])
+                && (color.length == 6) ?  color : arguments.callee(color);
+            })('');
+    }
+
+    function randomNum(minNum,maxNum){
+        switch(arguments.length){
+            case 1:
+                return parseInt(Math.random()*minNum+1,10);
+                break;
+            case 2:
+                return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+                break;
+            default:
+                return 0;
+                break;
+        }
+    }
+
+    function getPosition(x, y) {
+        var bbox = c.getBoundingClientRect();
+        return { x: x - bbox.left * (c.width  / bbox.width),
+            y: y - bbox.top  * (c.height / bbox.height)
+        };
+    }
+
+    function drawGrid() {
+        var _offset = 60,
+            _xnum = parseInt(c.width/_offset),
+            _ynum = parseInt(c.height/_offset),
+            _color = "#ccc";
+
+        ctx.strokeStyle = _color;
+        ctx.lineWidth = 1;
+
+        for(var i=1;i<_xnum;i++){
+            var _x = i*_offset,
+                _y1 = 0,
+                _y2 = c.height;
+            ctx.moveTo(_x, _y1);
+            ctx.lineTo(_x, _y2);
+            ctx.stroke();
+        }
+        for(var i=1;i<_ynum;i++){
+            var _y = i*_offset,
+                _x1 = 0,
+                _x2 = c.width;
+            ctx.moveTo(_x1, _y);
+            ctx.lineTo(_x2, _y);
+            ctx.stroke();
+        }
+    }
+</script>
+</body>
+</html>
