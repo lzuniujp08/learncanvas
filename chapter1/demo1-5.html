@@ -10,7 +10,10 @@
     </style>
 </head>
 <body>
-<canvas id="canvas" width="600" height="600"></canvas>
+<button onclick="snapshotImage()">快照</button><br>
+<img id="img" src="" width="300" height="300">
+
+<canvas id="canvas" width="300" height="300"></canvas>
 <script>
     var c = document.getElementById("canvas"),
         ctx = c.getContext("2d"),
@@ -24,6 +27,11 @@
     drawClock();
     T = setInterval(drawClock, 1000);
 
+    function snapshotImage() {
+        var img = document.querySelector("#img");
+        img.src = c.toDataURL();
+    }
+    
     function drawClock() {
         ctx.clearRect(0, 0, c.width, c.height);
         drawCircle(radius, false);
