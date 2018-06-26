@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        ul.tools{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            width: 100px;
+            float: left;
+            margin-right: 10px;
+        }
+        ul.tools li{
+            margin-top: 10px;
+            padding: 5px 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        ul.tools li.active{
+            box-shadow: 2px 2px 3px #666;
+            font-weight: bold;
+        }
+        #canvas{
+            border: 1px solid #ccc;
+            float: left;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+<ul class="tools">
+    <li type="line">直线</li>
+    <li type="rect">矩形</li>
+    <li type="circle">圆形</li>
+</ul>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    ctx.strokeStyle = "#f00";
+    ctx.lineWidth = 2;
+    ctx.lineJoin = "round";
+    ctx.fillStyle = "rgba(255,0,0,.5)";
+
+    var imgData = null,
+        start = null,
+        end = null;
+
+    var isDraw = false,
+        drawType = "";
+    $(".tools").children().on("click", function () {
+        $(".tools").children().removeClass("active");
+        $(this).addClass("active");
+        drawType = $(this).attr("type");
+        imgData = ctx.getImageData(0, 0, c.width, c.height);
+        isDraw = true;
+    });
+
+    c.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        start = getPosition(e.clientX, e.clientY);
+    });
+    c.addEventListener("mousemove", function (e) {
+        e.preventDefault();
+        var _end = getPosition(e.clientX, e.clientY);
+        drawProcess(_end);
+    });
+
+    c.addEventListener("mouseup", function (e) {
+        e.preventDefault();
+        if(isDraw) {
+            end = getPosition(e.clientX, e.clientY);
+            draw(end);
+        }
+        $(".tools").children().removeClass("active");
+        isDraw = false;
+        imgData = ctx.getImageData(0, 0, c.width, c.height);
+        start = null;
+        end = null;
+    });
+    
+    function drawProcess(pos) {
+        if(isDraw) draw(pos);
+    }
+
+    function draw(pos) {
+        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.putImageData(imgData, 0, 0);
+        switch (drawType){
+            case "line":{
+                ctx.beginPath();
+                ctx.moveTo(start.x, start.y);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                break;
+            }
+            case "rect":{
+                ctx.beginPath();
+                ctx.moveTo(start.x, start.y);
+                var _w = pos.x - start.x,
+                    _h = pos.y - start.y;
+                ctx.rect(start.x, start.y, _w, _h);
+                ctx.stroke();
+                ctx.fill();
+                break;
+            }
+            case "circle":{
+                ctx.beginPath();
+                ctx.moveTo(start.x, start.y);
+                var _dx = start.x-pos.x,
+                    _dy = start.y-pos.y;
+                var _r = Math.sqrt(_dx*_dx, _dy*_dy);
+                ctx.arc(start.x, start.y, _r, 0, Math.PI*2, false);
+                ctx.stroke();
+                ctx.fill();
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+    }
+
+    function getPosition(x, y) {
+        var bbox = c.getBoundingClientRect();
+        return { x: x - bbox.left * (c.width  / bbox.width),
+            y: y - bbox.top  * (c.height / bbox.height)
+        };
+    }
+</script>
+</body>
+</html>

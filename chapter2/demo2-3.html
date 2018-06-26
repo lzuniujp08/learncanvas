@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div id="mouse-pos"></div>
+<div id="canvas-pos"></div>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    var gradient = ctx.createLinearGradient(0,0,c.width, c.height);
+    gradient.addColorStop(0, "#e6e600");
+    gradient.addColorStop(0.2, "#d1c50b");
+    gradient.addColorStop(0.4, "#d49500");
+    gradient.addColorStop(0.6, "#dd8810");
+    gradient.addColorStop(1, "#ff0000");
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0 , c.width, c.height);
+</script>
+</body>
+</html>

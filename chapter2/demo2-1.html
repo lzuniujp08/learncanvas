@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div id="mouse-pos"></div>
+<div id="canvas-pos"></div>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+    var imgData = null;
+    var image = new Image();
+    image.src = "img/bg.jpg";
+    image.onload = function(e) {
+        e.preventDefault();
+        ctx.drawImage(image, 0, 0, c.width, c.height);
+        imgData = ctx.getImageData(0, 0, c.width, c.height);
+    };
+    ctx.globalAlpha = .5;
+</script>
+</body>
+</html>

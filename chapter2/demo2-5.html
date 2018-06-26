@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div id="mouse-pos"></div>
+<div id="canvas-pos"></div>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+    var img = new Image();
+    img.src="img/icon.png";
+    img.onload = function (e) {
+        //repeat, repeat-x, repeat-y, no-repeat
+        var pattern = ctx.createPattern(img, "repeat");
+        ctx.fillStyle = pattern;
+        ctx.fillRect(0,0,c.width,c.height);
+    }
+</script>
+</body>
+</html>
