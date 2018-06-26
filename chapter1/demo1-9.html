@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div id="mouse-pos"></div>
+<div id="canvas-pos"></div>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+    var imgData = null;
+    var image = new Image();
+    image.src = "img/bg.jpg";
+    image.onload = function(e) {
+        e.preventDefault();
+        ctx.drawImage(image, 0, 0, c.width, c.height);
+        imgData = ctx.getImageData(0, 0, c.width, c.height);
+    };
+    c.style.cursor = "crosshair";
+
+    var start= null,
+        end = null,
+        flag = false;
+    c.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        flag = true;
+        start = getPosition(e.clientX, e.clientY);
+    });
+
+    c.addEventListener("mousemove", function (e) {
+        e.preventDefault();
+        var _end = getPosition(e.clientX, e.clientY);
+        drawRect(_end);
+    });
+
+    c.addEventListener("mouseup", function (e) {
+        e.preventDefault();
+        flag = false;
+        end = getPosition(e.clientX, e.clientY);
+        zoomInImg();
+    });
+
+    function zoomInImg() {
+        var bbox = canvas.getBoundingClientRect();
+        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.putImageData(imgData, 0, 0);
+        ctx.drawImage(c,
+            parseInt(start.x-bbox.left),
+            parseInt(start.y-bbox.top),
+            parseInt(end.x-start.x),
+            parseInt(end.y-start.y),
+            0, 0, canvas.width, canvas.height
+        );
+        imgData = ctx.getImageData(0, 0, c.width, c.height);
+    }
+
+    function drawRect(pos) {
+        if(flag) {
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.putImageData(imgData, 0, 0);
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "blue";
+
+            ctx.moveTo(start.x, start.y);
+            ctx.strokeRect(start.x, start.y, pos.x-start.x, pos.y-start.y);
+        }
+    }
+    
+    function getPosition(x, y) {
+        var bbox = c.getBoundingClientRect();
+        return { x: x - bbox.left * (c.width  / bbox.width),
+            y: y - bbox.top  * (c.height / bbox.height)
+        };
+    }
+</script>
+</body>
+</html>

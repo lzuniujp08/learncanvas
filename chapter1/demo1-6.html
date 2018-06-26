@@ -16,12 +16,13 @@
 <script>
     var c = document.querySelector("#canvas");
     var ctx = c.getContext("2d");
-
+    var imgData = null;
     var image = new Image();
-    image.src = "img/draw2denv.png";
+    image.src = "img/bg.jpg";
     image.onload = function(e) {
         e.preventDefault();
         ctx.drawImage(image, 0, 0, c.width, c.height);
+        imgData = ctx.getImageData(0, 0, c.width, c.height);
     };
 
     c.addEventListener("mousemove", function (e) {
@@ -31,8 +32,31 @@
         mousePos.innerHTML = "鼠标位置："+e.clientX+", "+e.clientY;
         var _cPosition = getPosition(e.clientX, e.clientY);
         canvasPos.innerHTML = "画布位置："+_cPosition.x.toFixed(0)+", "+_cPosition.y.toFixed(0);
+
+        drawLine(_cPosition);
     });
     
+    function drawLine(pos) {
+        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.putImageData(imgData, 0, 0);
+
+        var _x1 = 0,
+            _x2 = c.width,
+            _y1 = 0,
+            _y2 = c.height;
+
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "blue";
+
+        ctx.moveTo(pos.x, _y1);
+        ctx.lineTo(pos.x, _y2);
+        ctx.stroke();
+
+        ctx.moveTo(_x1, pos.y);
+        ctx.lineTo(_x2, pos.y);
+        ctx.stroke();
+    }
     
     function getPosition(x, y) {
         var bbox = c.getBoundingClientRect();
