@@ -13,16 +13,13 @@
 <canvas id="canvas" width="1000" height="600"></canvas>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
-    var c = document.querySelector("#canvas");
-    var ctx = c.getContext("2d");
-
     /**
      * 扩展虚线
      */
     var moveToFunction = CanvasRenderingContext2D.prototype.moveTo;
     CanvasRenderingContext2D.prototype.lastMoveToLocation = {};
     CanvasRenderingContext2D.prototype.moveTo = function (x, y) {
-        moveToFunction.apply(ctx, [x,y]);
+        moveToFunction.apply(this, [x,y]);
         this.lastMoveToLocation.x = x;
         this.lastMoveToLocation.y = y;
     };
@@ -42,6 +39,9 @@
         }
         this.moveTo(x, y);
     };
+
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
 
     ctx.strokeStyle = "#a9a9a9";
     ctx.lineWidth = 2;
