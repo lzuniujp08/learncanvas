@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<div id="mouse-pos"></div>
+<div id="canvas-pos"></div>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    ctx.strokeStyle = "#f00";
+    ctx.lineWidth = 2;
+    ctx.lineJoin = "round";
+    ctx.fillStyle = "rgba(255,0,0,.5)";
+
+    ctx.beginPath();
+    //x,y,radius,startAngle,endAngle,anticlockwise
+    ctx.arc(100, 100, 50, 0, Math.PI/2, true);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(100, 100, 50, 0, Math.PI/2, false);
+    ctx.lineTo(100, 100);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fill();
+
+    ctx.beginPath();
+    //x, y, w, h
+    ctx.rect(200, 100, 200, 100);
+    ctx.stroke();
+    ctx.fill();
+</script>
+</body>
+</html>

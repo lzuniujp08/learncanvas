@@ -91,17 +91,15 @@
     function draw(pos) {
         ctx.clearRect(0, 0, c.width, c.height);
         ctx.putImageData(imgData, 0, 0);
+        ctx.beginPath();
         switch (drawType){
             case "line":{
-                ctx.beginPath();
                 ctx.moveTo(start.x, start.y);
                 ctx.lineTo(pos.x, pos.y);
                 ctx.stroke();
                 break;
             }
             case "rect":{
-                ctx.beginPath();
-                ctx.moveTo(start.x, start.y);
                 var _w = pos.x - start.x,
                     _h = pos.y - start.y;
                 ctx.rect(start.x, start.y, _w, _h);
@@ -110,8 +108,6 @@
                 break;
             }
             case "circle":{
-                ctx.beginPath();
-                ctx.moveTo(start.x, start.y);
                 var _dx = start.x-pos.x,
                     _dy = start.y-pos.y;
                 var _r = Math.sqrt(_dx*_dx, _dy*_dy);

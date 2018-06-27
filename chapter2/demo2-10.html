@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    /**
+     * 扩展虚线
+     */
+    var moveToFunction = CanvasRenderingContext2D.prototype.moveTo;
+    CanvasRenderingContext2D.prototype.lastMoveToLocation = {};
+    CanvasRenderingContext2D.prototype.moveTo = function (x, y) {
+        moveToFunction.apply(ctx, [x,y]);
+        this.lastMoveToLocation.x = x;
+        this.lastMoveToLocation.y = y;
+    };
+    CanvasRenderingContext2D.prototype.dashedLineTo = function (x, y, dashLength) {
+        dashLength = dashLength === undefined ? 5 : dashLength;
+
+        var startX = this.lastMoveToLocation.x;
+        var startY = this.lastMoveToLocation.y;
+
+        var deltaX = x - startX;
+        var deltaY = y - startY;
+        var numDashes = Math.floor(Math.sqrt(deltaX * deltaX + deltaY * deltaY) / dashLength);
+
+        for (var i=0; i < numDashes; ++i) {
+            this[ i % 2 === 0 ? 'moveTo' : 'lineTo' ]
+            (startX + (deltaX / numDashes) * i, startY + (deltaY / numDashes) * i);
+        }
+        this.moveTo(x, y);
+    };
+
+    ctx.strokeStyle = "#a9a9a9";
+    ctx.lineWidth = 2;
+    ctx.lineJoin = "round";
+    ctx.font = "bold 20px Times New Roman";
+
+    var offset = 50;
+    //绘制主轴
+    ctx.beginPath();
+    ctx.moveTo(offset, offset/2);
+    ctx.dashedLineTo(offset, c.height - offset/2);
+    ctx.stroke();
+    ctx.fillText("y", offset-5, offset/2-10);
+
+    ctx.beginPath();
+    ctx.moveTo(offset/2, c.height - offset);
+    ctx.dashedLineTo(c.width - offset/2, c.height - offset);
+    ctx.stroke();
+    ctx.fillText("x", c.width - offset/2 + 5, c.height - offset+5);
+
+    //绘制间隔
+    ctx.lineWidth = 1;
+    ctx.font = "bold 15px Times New Roman";
+    var interval = 50;
+    var _y = c.height - offset,
+        _x1 = offset,
+        _x2 = offset+10;
+    for(var i=1;i<=parseInt((c.height-100)/interval);i++){//y
+        ctx.beginPath();
+        var _yy = _y-interval*i;
+        ctx.moveTo(_x1, _yy);
+        ctx.lineTo(_x2, _yy);
+        ctx.stroke();
+        var _txt = interval*i.toString();
+        var _txtWidth = ctx.measureText(_txt.toString()).width;
+        ctx.fillText(_txt, offset- 5 -_txtWidth, _yy+5);
+    }
+
+    var _x = offset,
+        _y1 = c.height-offset,
+        _y2 = c.height-offset-10;
+    for(var i=1;i<=parseInt((c.width-100)/interval);i++){//x
+        ctx.beginPath();
+        var _xx = _x+interval*i;
+        ctx.moveTo(_xx, _y1);
+        ctx.lineTo(_xx, _y2);
+        ctx.stroke();
+        var _txt = interval*i.toString();
+        var _txtWidth = ctx.measureText(_txt.toString()).width;
+        ctx.fillText(_txt, _xx-_txtWidth/2, c.height-offset+18);
+    }
+</script>
+</body>
+</html>

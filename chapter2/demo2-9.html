@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+</head>
+<body>
+<canvas id="canvas" width="1000" height="600"></canvas>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    ctx.strokeStyle = "#f00";
+    ctx.lineWidth = 2;
+    ctx.lineJoin = "round";
+    ctx.fillStyle = "rgba(0,0,0,.8)";
+
+    ctx.fillRect(0,0,c.width,c.height);
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(100, 100, 50, 50);
+
+    ctx.arc(250, 100, 50, 0, Math.PI*2, false);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(300, 300);
+    ctx.lineTo(400, 300);
+    ctx.lineTo(350, 200);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(500, 200);
+    ctx.arc(500,200,50, 0, Math.PI/2, false);//逆时针
+    ctx.lineTo(500, 200);
+    ctx.closePath();
+    ctx.fill();
+</script>
+</body>
+</html>
