@@ -124,3 +124,50 @@ ctx.rect(200, 100, 200, 100);
 ctx.stroke();
 ctx.fill();
 ```
+## 7.绘制圆弧
+![绘制圆弧](img/draw_arc.png)
+```js
+ctx.arc(500,200,50, 0, Math.PI/2, false);//逆时针
+
+function roundedRect(cornerX, cornerY, width, height, cornerRadius) {
+   if (width > 0) context.moveTo(cornerX + cornerRadius, cornerY);
+   else           context.moveTo(cornerX - cornerRadius, cornerY);
+
+   context.arcTo(cornerX + width, cornerY,
+                 cornerX + width, cornerY + height,
+                 cornerRadius);
+
+   context.arcTo(cornerX + width, cornerY + height,
+                 cornerX, cornerY + height,
+                 cornerRadius);
+
+   context.arcTo(cornerX, cornerY + height,
+                 cornerX, cornerY,
+                 cornerRadius);
+
+   if (width > 0) {
+      context.arcTo(cornerX, cornerY,
+                    cornerX + cornerRadius, cornerY,
+                    cornerRadius);
+   }
+   else {
+      context.arcTo(cornerX, cornerY,
+                    cornerX - cornerRadius, cornerY,
+                    cornerRadius);
+   }
+}
+
+function drawRoundedRect(strokeStyle, fillStyle, cornerX, cornerY, width, height, cornerRadius) {
+   context.beginPath();
+
+   roundedRect(cornerX, cornerY, width, height, cornerRadius);
+
+   context.strokeStyle = strokeStyle;
+   context.fillStyle = fillStyle;
+
+   context.stroke();
+   context.fill();
+}
+```
+
+## 8.贝萨尔曲线
