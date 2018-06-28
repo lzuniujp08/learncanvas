@@ -124,6 +124,26 @@ ctx.rect(200, 100, 200, 100);
 ctx.stroke();
 ctx.fill();
 ```
+#### 6.1绘制等边N边形
+```js
+    createNPolygon(300, 300, 100, 4, 60);
+
+    function createNPolygon(centerx, centery, radius, sides, startAngle) {
+        var _perAngle = Math.PI*2/sides;
+        for(var i=0;i<sides;i++){
+            var _angle = _perAngle*i + Math.PI/180*startAngle;
+            var _x = Math.cos(_angle)*radius,
+                _y = Math.sin(_angle)*radius;
+            _x = centerx+_x;
+            _y = centery-_y;
+            if(i===0) ctx.moveTo(_x, _y);
+            else ctx.lineTo(_x, _y)
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+```
+
 ## 7.绘制圆弧
 ![绘制圆弧](img/draw_arc.png)
 ```js
@@ -171,3 +191,41 @@ function drawRoundedRect(strokeStyle, fillStyle, cornerX, cornerY, width, height
 ```
 
 ## 8.贝萨尔曲线
+### 8.1 二次方贝萨尔曲线
+```js
+ctx.beginPath();
+ctx.moveTo(100, 100);
+//绘制正余弦曲线效果
+//quadraticCurveTo接受四个参数，cpx，cpy, x, y
+ctx.quadraticCurveTo(150, 50, 200, 100);
+ctx.quadraticCurveTo(250, 150, 300, 100);
+ctx.quadraticCurveTo(350, 50, 400, 100);
+ctx.quadraticCurveTo(450, 150, 500, 100);
+ctx.stroke();
+```
+```js
+//类似于圆角三角形的效果
+ctx.beginPath();
+ctx.moveTo(950, 500);
+ctx.quadraticCurveTo(1000, 500, 975, 457);
+ctx.lineTo(775, 110);
+ctx.quadraticCurveTo(750, 67, 725, 110);
+ctx.lineTo(525, 457);
+ctx.quadraticCurveTo(500, 500, 550, 500);
+ctx.closePath();
+ctx.stroke();
+```
+### 8.2 三次方贝萨尔曲线
+```js
+//类似于圆角三角形的效果
+ctx.beginPath();
+ctx.moveTo(950, 500);
+ctx.quadraticCurveTo(1000, 500, 975, 457);
+ctx.lineTo(775, 110);
+ctx.quadraticCurveTo(750, 67, 725, 110);
+ctx.lineTo(525, 457);
+ctx.quadraticCurveTo(500, 500, 550, 500);
+ctx.closePath();
+ctx.stroke();
+```
+

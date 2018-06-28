@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1100" height="600"></canvas>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    ctx.strokeStyle = "#a9a9a9";
+    ctx.lineWidth = 2;
+    ctx.lineJoin = "round";
+    ctx.font = "bold 20px Times New Roman";
+
+    var start= null,
+        end = null,
+        flag = false,
+        imgData = null;
+    c.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        flag = true;
+        start = getPosition(e.clientX, e.clientY);
+        imgData = ctx.getImageData(0, 0, c.width, c.height);
+    });
+
+    c.addEventListener("mousemove", function (e) {
+        e.preventDefault();
+        var _end = getPosition(e.clientX, e.clientY);
+        if(flag) drawRect(_end);
+    });
+
+    c.addEventListener("mouseup", function (e) {
+        e.preventDefault();
+        flag = false;
+        end = getPosition(e.clientX, e.clientY);
+        drawEnd();
+    });
+
+    function drawRect(pos) {
+        var _dltX = pos.x - start.x,
+            _dltY = pos.y - start.y;
+        var _radius = Math.sqrt(_dltX*_dltX+_dltY*_dltY),
+            _angle = getDrawAngle(start, pos),
+            _sides = 6;
+        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.putImageData(imgData, 0, 0);
+        ctx.beginPath();
+        createNPolygon(start, _radius, _sides, _angle);
+    }
+    
+    function drawEnd() {
+        drawRect(end);
+    }
+
+    function getPosition(x, y) {
+        var bbox = c.getBoundingClientRect();
+        return { x: x - bbox.left * (c.width  / bbox.width),
+            y: y - bbox.top  * (c.height / bbox.height)
+        };
+    }
+
+    function createNPolygon(center, radius, sides, startAngle) {
+        var _perAngle = Math.PI*2/sides;
+        for(var i=0;i<sides;i++){
+            var _angle = _perAngle*i + Math.PI/180*startAngle;
+            var _x = Math.cos(_angle)*radius,
+                _y = Math.sin(_angle)*radius;
+            _x = center.x+_x;
+            _y = center.y-_y;
+            if(i===0) ctx.moveTo(_x, _y);
+            else ctx.lineTo(_x, _y)
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+    
+    function getDrawAngle(point1, point2) {
+        var _dltX = point2.x-point1.x,
+            _dltY = point2.y-point1.y;
+        var _angle = Math.atan(_dltY/-_dltX);
+        return 180/Math.PI*-_angle;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1100" height="600"></canvas>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    ctx.strokeStyle = "#a9a9a9";
+    ctx.lineWidth = 6;
+    ctx.lineJoin = "round";
+    ctx.font = "bold 20px Times New Roman";
+
+    ctx.beginPath();
+    ctx.moveTo(950, 500);
+    ctx.quadraticCurveTo(1000, 500, 975, 457);
+    ctx.lineTo(775, 110);
+    ctx.quadraticCurveTo(750, 67, 725, 110);
+    ctx.lineTo(525, 457);
+    ctx.quadraticCurveTo(500, 500, 550, 500);
+    ctx.closePath();
+    ctx.stroke();
+</script>
+</body>
+</html>
