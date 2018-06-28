@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1100" height="600"></canvas>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="lib/Polygon.js"></script>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    ctx.strokeStyle = "#a9a9a9";
+    ctx.lineWidth = 2;
+    ctx.lineJoin = "round";
+    ctx.font = "bold 20px Times New Roman";
+    ctx.fillStyle = "RGBA(255,0,0,.5)";
+
+    var polygons = [],
+        isedit = false;
+    var polygon1 = new Polygon(200, 200, 60, 6, 0, "#a9a9a9","RGBA(255,0,0,.5)", isedit);
+    var polygon2 = new Polygon(500, 200, 30, 6, 0, "#a9a9a9","RGBA(255,0,0,.5)", isedit);
+    var polygon3 = new Polygon(800, 200, 100, 6, 0, "#a9a9a9","RGBA(255,0,0,.5)", isedit);
+    drawPolygon(polygon1);
+    drawPolygon(polygon2);
+    drawPolygon(polygon3);
+    polygons = [polygon1, polygon2, polygon3];
+
+    var editIndex = 0,
+        start = null,
+        end = null;
+
+    c.addEventListener("mousemove", function (e) {
+        if(isedit) {
+            var loc = getPosition(e.clientX, e.clientY);
+            drawPolygons(loc);
+        }
+    });
+    
+    function drawPolygons(loc) {
+        ctx.clearRect(0, 0, c.width, c.height);
+        for(var i=0, len=polygons.length;i<len;i++){
+            var _polygon = polygons[i];
+            if(i===editIndex) _polygon.move(loc.x, loc.y);
+            drawPolygon(_polygon);
+        }
+    }
+
+    c.addEventListener("mousedown", function (e) {
+        var loc = getPosition(e.clientX, e.clientY);
+        for(var i=0,len=polygons.length;i<len;i++){
+            var _polygon = polygons[i];
+            _polygon.createPath(ctx);
+            if (ctx.isPointInPath(loc.x, loc.y)) {
+                editIndex = i;
+                start = loc;
+                isedit = true;
+                c.style.cursor = "move";
+                break;
+            }
+        }
+    });
+
+    c.addEventListener("mouseup", function (e) {
+        end = getPosition(e.clientX, e.clientY);
+        isedit = false;
+        drawPolygons(end);
+        c.style.cursor = "default";
+    });
+
+    function drawPolygon(polygon) {
+        ctx.beginPath();
+        polygon.createPath(ctx);
+        polygon.stroke(ctx);
+        polygon.fill(ctx);
+    }
+
+    function getPosition(x, y) {
+        var bbox = c.getBoundingClientRect();
+        return { x: x - bbox.left * (c.width  / bbox.width),
+            y: y - bbox.top  * (c.height / bbox.height)
+        };
+    }
+</script>
+</body>
+</html>
