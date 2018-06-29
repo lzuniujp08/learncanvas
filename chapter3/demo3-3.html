@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1100" height="600"></canvas>
+<script src="lib/textcursor.js"></script>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d"),
+        cursor = new TextCursor();
+
+    ctx.font = "normal 30px Time New Roman";
+    var blinkingInterval = 0,
+        imgData = null,
+        loc = null,
+        texts = [];
+
+    c.addEventListener("click", function (e) {
+        loc = getPosition(e.clientX, e.clientY);
+        drawCursor();
+        blinkingInterval = setInterval(drawCursor, 1000);
+    });
+
+    document.onkeypress = function (e) {
+        var key = String.fromCharCode(e.which);
+        if (e.keyCode !== 8 && !e.ctrlKey && !e.metaKey) {
+            e.preventDefault(); // no further browser processing
+            ctx.save();
+            texts.push(key);
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.fillText(texts.join(""), loc.x, loc.y);
+            imgData = ctx.getImageData(0, 0, c.width, c.height);
+        }
+    };
+
+    function drawCursor() {
+        ctx.clearRect(0, 0, c.width, c.height);
+        if(imgData) ctx.putImageData(imgData, 0, 0);
+        setTimeout(function () {
+            var _x = loc.x + ctx.measureText(texts.join("")).width;
+            cursor.draw(ctx, _x, loc.y);
+        }, 300);
+    }
+
+    function getPosition(x, y) {
+        var bbox = c.getBoundingClientRect();
+        return { x: x - bbox.left * (c.width  / bbox.width),
+            y: y - bbox.top  * (c.height / bbox.height)
+        };
+    }
+</script>
+</body>
+</html>
