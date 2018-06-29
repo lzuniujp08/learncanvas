@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<input type="checkbox" onchange="setSize(this)">scale image<br>
+<canvas id="canvas" width="1100" height="600"></canvas>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    var img = new Image();
+    img.src = "img/bg.jpg";
+    img.onload = function () {
+        ctx.drawImage(img, 0, 0, c.width/2, c.height/2);
+    };
+    
+    function setSize(obj) {
+        ctx.clearRect(0, 0, c.width, c.height);
+        if(obj.checked) {
+            ctx.drawImage(img, 0, 0, c.width, c.height);
+        }else{
+            ctx.drawImage(img, 0, 0, c.width/2, c.height/2);
+        }
+    }
+</script>
+</body>
+</html>

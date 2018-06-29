@@ -38,7 +38,7 @@ var image = new Image(),
 // Functions.....................................................   
 
 function emboss() {
-   var imagedata, data, length, width, index=3;
+   var imagedata, data, length, width;
 
    imagedata = context.getImageData(0, 0,
                                     canvas.width, canvas.height);

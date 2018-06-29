@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<button onclick="negativeImage()">Negative</button>
+<canvas id="canvas" width="1100" height="600"></canvas>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d"),
+        data = null;
+
+    var img = new Image();
+    img.src = "img/bg.jpg";
+    img.onload = function () {
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+    };
+
+    function negativeImage(){
+        var imagedata = ctx.getImageData(0, 0, c.width, c.height),
+            data = imagedata.data;
+
+        //变灰
+        for(var i=0; i < data.length - 4; i+=4) {
+            var average = (data[i] + data[i+1] + data[i+2]) / 3;
+            data[i]   = average;
+            data[i+1] = average;
+            data[i+2] = average;
+        }
+
+        //阴像
+        for(var i=0; i <= data.length - 4; i+=4) {
+            data[i]   = 255 - data[i]
+            data[i+1] = 255 - data[i+1];
+            data[i+2] = 255 - data[i+2];
+        }
+
+        //浮雕
+
+        ctx.putImageData(imagedata, 0, 0);
+    }
+</script>
+</body>
+</html>

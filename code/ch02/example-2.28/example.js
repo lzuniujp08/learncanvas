@@ -59,7 +59,6 @@ var canvas = document.getElementById('canvas'),
     polygons = [];
 
 // Functions..........................................................
-
 function drawGrid(color, stepx, stepy) {
    context.save()
 
@@ -67,7 +66,7 @@ function drawGrid(color, stepx, stepy) {
    context.shadowBlur = 0;
    context.shadowOffsetX = 0;
    context.shadowOffsetY = 0;
-   
+
    context.strokeStyle = color;
    context.fillStyle = '#ffffff';
    context.lineWidth = 0.5;

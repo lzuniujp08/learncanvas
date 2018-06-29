@@ -43,7 +43,7 @@ function drawInBlackAndWhite() {
    data = imagedata.data;
    
    for(i=0; i < data.length - 4; i+=4) {
-      average = (data[i] + data[i+1] + data[i+2]) / 3;
+      var average = (data[i] + data[i+1] + data[i+2]) / 3;
       data[i]   = average;
       data[i+1] = average;
       data[i+2] = average;
