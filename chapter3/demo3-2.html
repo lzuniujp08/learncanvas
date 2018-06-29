@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1100" height="600"></canvas>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    var x = c.width/2,
+        y = c.height/2,
+        r = 150,
+        startAngle = 180,
+        endAngle = 0,
+        text = "北京安盛智联软件有限公司";
+
+    ctx.strokeStyle = "#999";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(x, y, r, Math.PI/180*startAngle, Math.PI/180*endAngle, false);
+    ctx.stroke();
+
+    drawCircularText(x, y, r, startAngle, endAngle, text);
+
+    function drawCircularText(centerx, centery, r, startAngle, endAngle, text) {
+        startAngle = Math.PI/180 * startAngle;
+        endAngle = Math.PI/180 * endAngle;
+        var radius = r,
+            angleDecrement = (startAngle - endAngle)/(text.length-1),
+            angle = parseFloat(startAngle),
+            index = 0,
+            character;
+
+        ctx.save();
+        ctx.fillStyle = "red";
+        ctx.font = 'bold 18px 微软雅黑';
+        ctx.textBaseline = "top";
+        ctx.textAlign = "center";
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "black";
+
+        while (index < text.length) {
+            character = text.charAt(index);
+
+            ctx.save();
+            ctx.beginPath();
+
+            ctx.translate(
+                centerx + Math.cos(angle) * radius,
+                centery - Math.sin(angle) * radius);
+
+            ctx.rotate(Math.PI/2 - angle);
+
+            ctx.fillText(character, 0, 0);
+//            ctx.strokeText(character, 0, 0);
+
+            angle -= angleDecrement;
+            index++;
+
+            ctx.restore();
+        }
+        ctx.restore();
+    }
+</script>
+</body>
+</html>
