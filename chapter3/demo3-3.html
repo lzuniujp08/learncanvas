@@ -25,6 +25,9 @@
 
     c.addEventListener("click", function (e) {
         loc = getPosition(e.clientX, e.clientY);
+        imgData = ctx.getImageData(0, 0, c.width, c.height);
+        texts = [];
+        clearInterval(blinkingInterval);
         drawCursor();
         blinkingInterval = setInterval(drawCursor, 1000);
     });
