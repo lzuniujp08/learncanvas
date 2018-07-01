@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <style>
+        #canvas{
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1100" height="600"></canvas>
+<script>
+    var c = document.querySelector("#canvas");
+    var ctx = c.getContext("2d");
+
+    var circles = [{
+        c: randomColor(),
+        r: 30
+    },{
+        c: randomColor(),
+        r: 60
+    },{
+        c: randomColor(),
+        r: 90
+    }];
+
+    requestAnimationFrame(animate);
+
+    function animate() {
+        ctx.clearRect(0, 0, c.width, c.height);
+        for(var i=0;i<circles.length;i++){
+            ctx.beginPath();
+            var _c = circles[i];
+            var x = randomNum(100, 1000),
+                y = randomNum(100, 500);
+            ctx.arc(x, y, _c.r, 0, Math.PI*2, false);
+            ctx.fillStyle = _c.c;
+            ctx.fill();
+        }
+        requestAnimationFrame(animate);
+    }
+    /**
+     * 随机数
+     */
+    function randomNum(minNum,maxNum){
+        switch(arguments.length){
+            case 1:
+                return parseInt(Math.random()*minNum+1,10);
+                break;
+            case 2:
+                return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+                break;
+            default:
+                return 0;
+                break;
+        }
+    }
+    /**
+     * 随机颜色
+     */
+    function randomColor(){
+        return (function(m,s,c){
+            return (c ? arguments.callee(m,s,c-1) : '#') +
+                s[m.floor(m.random() * 16)]
+        })(Math,'0123456789abcdef',5)
+    }
+
+    window.requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            function( callback ){
+                window.setTimeout(callback, 1000 / 60);
+            };
+    })();
+</script>
+</body>
+</html>
